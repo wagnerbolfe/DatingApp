@@ -1,30 +1,31 @@
 <div class="card">
   <div class="card-body">
-    <div *ngIf="messages.length === 0">
+    <div *ngIf="(messageService.messageThread$ | async)?.length === 0">
       No messages yet... say hi by using the message box below
     </div>
 
-    <ul *ngIf="messages.length > 0" class="chat">
-      <li *ngFor="let message of messages">
+    <ul *ngIf="(messageService.messageThread$ | async)!.length > 0" class="chat">
+      <li *ngFor="let message of (messageService.messageThread$ | async)">
         <div>
           <span class="chat-img float-end">
             <img class="rounded-circle" src="{{message.senderPhotoUrl || './assets/user.png'}}"
               alt="image of user">
           </span>
           <div class="chat-body">
-            <div class="header">
+            <div class="header mt-3">
               <small class="text-muted">
-                <span class="fa fa-clock-o mx-1"></span>
-                <span style="font-family: Ubuntu;">{{message.messageSent + 'Z'| timeago}}</span>
-                <span class="text-danger mx-1"
-                  *ngIf="!message.dateRead && message.senderUsername !== username">(unread)</span>
-                <span class="text-success mx-1"
-                  *ngIf="message.dateRead&& message.senderUsername !== username">(read
-                  {{message.dateRead
-                  + 'Z' | timeago}})</span>
+                <div class="d-flex align-items-center">
+                  <h6 class="fa fa-clock-o me-1"></h6>
+                  <h6>{{message.messageSent | timeago}}</h6>
+                  <h6 class="text-danger ms-1" *ngIf="!message.dateRead
+                        && message.senderUsername !== username">(unread)</h6>
+                  <h6 class="text-success ms-1" *ngIf="message.dateRead
+                        && message.senderUsername !== username">(read {{message.dateRead |
+                    timeago}})</h6>
+                </div>
               </small>
             </div>
-            <p>{{message.content}}</p>
+            <h6 class="mt-3">{{message.content}}</h6>
           </div>
         </div>
       </li>

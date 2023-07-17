@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
@@ -14,5 +15,10 @@ namespace API.Interfaces
         Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams);
         Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName);
         Task<bool> SaveAllAsync();
+        void AddGroup(GroupMessage group);
+        void RemoveConnection(Connection connection);
+        Task<Connection> GetConnection(string connectionId);
+        Task<GroupMessage> GetMessageGroup(string groupName);
+        Task<GroupMessage> GetGroupForConnection(string connectionId);
     }
 }
