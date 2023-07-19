@@ -25,6 +25,8 @@ namespace API.Extensions
             {
                 opt.EnableDetailedErrors = true;
                 opt.MaximumReceiveMessageSize = 102400000;
+                opt.ClientTimeoutInterval = TimeSpan.FromSeconds(7);
+                opt.KeepAliveInterval = TimeSpan.FromSeconds(1);
             });
             services.AddSingleton<PresenceTracker>();
 

@@ -29,14 +29,14 @@ namespace API.SignalR
         {
             var httpContext = Context.GetHttpContext();
             var otherUser = httpContext.Request.Query["user"];
-            var groupName = GetGroupName(Context.User.GetUsername(), otherUser);
+            var groupName = GetGroupName(Context.User.Identity.Name, otherUser);
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             var group = await AddToGroup(groupName);
 
             await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
             var messages = await _uow.MessageRepository
-                .GetMessageThread(Context.User.GetUsername(), otherUser);
+                .GetMessageThread(Context.User.Identity.Name, otherUser);
 
             var changes = _uow.HasChanges();
 
@@ -55,7 +55,7 @@ namespace API.SignalR
 
         public async Task SendMessage(CreateMessageDto createMessageDto)
         {
-            var username = Context.User.GetUsername();
+            var username = Context.User.Identity.Name;
 
             if (username == createMessageDto.RecipientUsername.ToLower())
                 throw new HubException("You cannot send messages to yourself");
@@ -109,7 +109,7 @@ namespace API.SignalR
         private async Task<GroupMessage> AddToGroup(string groupName)
         {
             var group = await _uow.MessageRepository.GetMessageGroup(groupName);
-            var connection = new Connection(Context.ConnectionId, Context.User.GetUsername());
+            var connection = new Connection(Context.ConnectionId, Context.User.Identity.Name);
 
             if (group == null)
             {
