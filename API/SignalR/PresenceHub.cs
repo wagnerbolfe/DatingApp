@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace API.SignalR
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class PresenceHub : Hub
     {
         private readonly PresenceTracker _tracker;

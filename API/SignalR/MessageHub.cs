@@ -1,24 +1,22 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace API.SignalR
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class MessageHub : Hub
     {
-        private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private readonly IHubContext<PresenceHub> _presenceHub;
+        private readonly IUnitOfWork _uow;
         public MessageHub(IUnitOfWork uow, IMapper mapper, IHubContext<PresenceHub> presenceHub)
         {
             _uow = uow;
@@ -36,7 +34,10 @@ namespace API.SignalR
 
             await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
-            var messages = await _uow.MessageRepository.GetMessageThread(Context.User.GetUsername(), otherUser);
+            var messages = await _uow.MessageRepository
+                .GetMessageThread(Context.User.GetUsername(), otherUser);
+
+            var changes = _uow.HasChanges();
 
             if (_uow.HasChanges()) await _uow.Complete();
 
@@ -97,7 +98,7 @@ namespace API.SignalR
             }
         }
 
-        private static string GetGroupName(string caller, string other)
+        private string GetGroupName(string caller, string other)
         {
             var stringCompare = string.CompareOrdinal(caller, other) < 0;
             return stringCompare ? $"{caller}-{other}" : $"{other}-{caller}";
