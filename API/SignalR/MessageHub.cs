@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
@@ -48,6 +49,7 @@ namespace API.SignalR
         {
             var group = await RemoveFromMessageGroup();
             await Clients.Group(group.Name).SendAsync("UpdatedGroup");
+            Trace.WriteLine(Context.ConnectionId + " - disconnected");
             await base.OnDisconnectedAsync(exception);
         }
 

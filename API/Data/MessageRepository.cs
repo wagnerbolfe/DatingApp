@@ -31,6 +31,7 @@ namespace API.Data
         {
             _context.Messages.Add(message);
         }
+
         public void DeleteMessage(Message message)
         {
             _context.Messages.Remove(message);
@@ -66,6 +67,7 @@ namespace API.Data
             var query = _context.Messages
                 .OrderByDescending(x => x.MessageSent)
                 .AsQueryable();
+
             query = messageParams.Container switch
             {
                 "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username
@@ -75,10 +77,13 @@ namespace API.Data
                 _ => query.Where(u => u.RecipientUsername == messageParams.Username
                     && u.RecipientDeleted == false && u.DateRead == null)
             };
+
             var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
+
             return await PagedList<MessageDto>
                 .CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
         }
+
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName)
         {
             var query = _context.Messages
@@ -91,6 +96,7 @@ namespace API.Data
                 .OrderBy(m => m.MessageSent)
                 .AsQueryable();
 
+
             var unreadMessages = query.Where(m => m.DateRead == null
                 && m.RecipientUsername == currentUserName).ToList();
 
@@ -101,6 +107,7 @@ namespace API.Data
                     message.DateRead = DateTime.UtcNow;
                 }
             }
+
             return await query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
@@ -108,6 +115,5 @@ namespace API.Data
         {
             _context.Connections.Remove(connection);
         }
-
     }
 }
