@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using API.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace API.SignalR
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PresenceHub : Hub
     {
         private readonly PresenceTracker _tracker;

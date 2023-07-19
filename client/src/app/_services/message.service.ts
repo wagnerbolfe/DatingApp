@@ -29,7 +29,7 @@ export class MessageService {
         skipNegotiation: true,
         transport: HttpTransportType.WebSockets,
         logger: signalR.LogLevel.Information,
-        accessTokenFactory: () => user.token
+        accessTokenFactory: async () => { return user.token }
       })
       .withAutomaticReconnect()
       .build();
