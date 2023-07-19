@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { Message } from '../_models/message';
-import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { HttpTransportType, HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject, take } from 'rxjs';
-import { User } from '../_models/user';
+import { environment } from 'src/environments/environment';
 import { Group } from '../_models/group';
+import { Message } from '../_models/message';
+import { User } from '../_models/user';
 import { BusyService } from './busy.service';
-import * as signalR from '@microsoft/signalr';
+import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +25,8 @@ export class MessageService {
     this.busyService.busy();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUsername, {
-        skipNegotiation: true,
-        transport: HttpTransportType.WebSockets,
-        logger: signalR.LogLevel.Information,
-        accessTokenFactory: async () => { return user.token }
+        accessTokenFactory: () => user.token,
+        transport: HttpTransportType.WebSockets
       })
       .withAutomaticReconnect()
       .build();
