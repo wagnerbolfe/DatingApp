@@ -8,6 +8,7 @@ import { BehaviorSubject, take } from 'rxjs';
 import { User } from '../_models/user';
 import { Group } from '../_models/group';
 import { BusyService } from './busy.service';
+import * as signalR from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,9 @@ export class MessageService {
     this.busyService.busy();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUsername, {
-        accessTokenFactory: () => user.token
+        accessTokenFactory: () => user.token,
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets
       })
       .withAutomaticReconnect()
       .build();
