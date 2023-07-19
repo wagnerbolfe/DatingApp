@@ -21,7 +21,11 @@ namespace API.Extensions
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddSignalR();
+            services.AddSignalR(opt =>
+            {
+                opt.EnableDetailedErrors = true;
+                opt.MaximumReceiveMessageSize = 102400000;
+            });
             services.AddSingleton<PresenceTracker>();
 
             return services;
