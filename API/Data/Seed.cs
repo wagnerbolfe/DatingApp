@@ -17,7 +17,8 @@ namespace API.Data
             await context.SaveChangesAsync();
         }
 
-        public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+        public static async Task SeedUsers(UserManager<AppUser> userManager,
+            RoleManager<AppRole> roleManager)
         {
             if (await userManager.Users.AnyAsync()) return;
 
@@ -25,7 +26,7 @@ namespace API.Data
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
+            var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
 
             var roles = new List<AppRole>
             {
