@@ -26,6 +26,9 @@ export class MessageService {
     this.busyService.busy();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUsername, {
+        skipNegotiation: true,
+        transport: HttpTransportType.WebSockets,
+        logger: signalR.LogLevel.Information,
         accessTokenFactory: async () => { return user.token }
       })
       .withAutomaticReconnect()
