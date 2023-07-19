@@ -8,8 +8,8 @@ processes = []
 
 [env]
   ASPNETCORE_URLS="http://+:8080"
-  CloudinarySettings__CloudName="wagdev"
-  CloudinarySettings__ApiKey="456621588915359"
+  Cloudinary__CloudName="dbslovwmh"
+  Cloudinary__ApiKey="681552377842749"
 
 [experimental]
   allowed_public_ports = []
